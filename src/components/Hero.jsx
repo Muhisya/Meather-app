@@ -29,14 +29,19 @@ export default function Hero({ city }) {
       setLoading(true);
       setError("");
       try {
+        console.log(`Fetching weather for ${activeCity}...`);
         const res = await axios.get(
           `/weather?q=${activeCity}&units=metric&appid=${apiKey}`,
           { signal: controller.signal }
         );
+        
+        console.log("Weather data received:", res.data);
         setWeather(res.data);
+
         localStorage.setItem(STORAGE_KEY, activeCity);
       } catch (err) {
         if (err.name !== "CanceledError") {
+          console.error("Fetch error:", err);
           setError("City not found");
           setWeather(null);
         }
@@ -46,6 +51,7 @@ export default function Hero({ city }) {
     };
 
     fetchWeather();
+
     return () => controller.abort();
   }, [activeCity, apiKey]);
 
@@ -76,14 +82,16 @@ export default function Hero({ city }) {
 
   if (error)
     return (
-      <div className="flex justify-center items-center h-screen w-full bg-[#0a0a0a] text-red-400 font-light tracking-wide">
-        {error}
+      <div className="flex justify-center items-center h-screen w-full bg-[#0a0a0a] text-red-400 font-light tracking-wide px-10 text-center">
+        {error === "City not found" ? `City "${activeCity}" not found` : error}
       </div>
     );
 
+  if (!weather) return null;
+
   return (
     <section className="min-h-screen w-full flex justify-center items-center p-4 md:p-8 bg-[#0a0a0a]">
-      <div className="relative w-full max-w-5xl overflow-hidden rounded-[3rem] bg-gradient-to-br from-white/10 to-white/[0.02] border mt-20 border-white/10 shadow-2xl">
+      <div className="relative w-full max-w-5xl overflow-hidden rounded-[3rem] bg-gradient-to-br from-white/10 to-white/[0.02] border mt-20  border-white/10 shadow-2xl">
         
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-blue-500/20 blur-[120px] rounded-full"></div>
         <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-purple-500/10 blur-[120px] rounded-full"></div>
