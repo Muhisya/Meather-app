@@ -66,7 +66,7 @@ const Navbar = ({ onSearch }) => {
       <div className="flex items-center gap-2 group cursor-pointer">
         <div className="text-3xl transition-transform group-hover:rotate-12 duration-300">🌥️</div>
         <h1 className="text-white font-black text-2xl tracking-tighter uppercase italic">
-          Meather
+          Meathera
         </h1>
       </div>
 
